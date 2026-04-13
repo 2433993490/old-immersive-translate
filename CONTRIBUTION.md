@@ -31,6 +31,28 @@ npm run build
 
 Load `dist/chrome`.
 
+### Package for end users (download + import)
+
+If you want to produce a downloadable package for users:
+
+```bash
+npm run chrome:package
+```
+
+Then send the generated file:
+
+`dist/immersive-translate-chrome-unpacked-v<version>.zip`
+
+User steps:
+
+1. Download the zip and unzip it
+2. Open `chrome://extensions`
+3. Enable **Developer mode**
+4. Click **Load unpacked**
+5. Select the extracted `chrome` folder
+
+For maintainers: when pushing a `v*` tag, GitHub Releases workflow will upload this zip as a release asset for direct download.
+
 
 ## Dev
 
@@ -70,5 +92,3 @@ and then run:
 ```
 make watch
 ```
-
-

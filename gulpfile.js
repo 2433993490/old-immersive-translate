@@ -77,6 +77,13 @@ gulp.task("chrome-zip", () => {
     .pipe(gulp.dest("dist"));
 });
 
+gulp.task("chrome-download-package", () => {
+  return gulp
+    .src(["dist/chrome/**/*"], { base: "dist" })
+    .pipe(zip(`immersive-translate-chrome-unpacked-v${manifest.version}.zip`))
+    .pipe(gulp.dest("dist"));
+});
+
 gulp.task("chrome-replace",()=>{
   return gulp.src(["dist/chrome/**/*.html"])
   .pipe(replace("__IMMERSIVE_TRANSLATE_VERSION__",manifest.version))
@@ -95,6 +102,10 @@ gulp.task(
 gulp.task(
   "chrome-build",
   gulp.series("chrome-copy", "chrome-rename", "chrome-babel", "chrome-replace","chrome-concat-background","chrome-zip")
+);
+gulp.task(
+  "chrome-package-download",
+  gulp.series("chrome-build", "chrome-download-package")
 );
 
 gulp.task("default", gulp.series("clean", "firefox-build", "chrome-build"));

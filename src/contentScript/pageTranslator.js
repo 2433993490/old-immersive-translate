@@ -978,6 +978,14 @@ Promise.all([twpConfig.onReady(), getTabUrl()])
                     }
                 })
             }
+        } else if (request.action === "showOCRResult") {
+            if (window.self !== window.top) return
+            const payload = request.payload || {}
+            if (payload.ok) {
+                alert(`OCR: ${payload.extractedText}\n\nTranslated: ${payload.translatedText}`)
+            } else {
+                alert(`OCR failed: ${payload.error || "unknown error"}`)
+            }
         }
     })
 
@@ -1077,4 +1085,3 @@ function detectPageLanguage() {
   })
 
 }
-

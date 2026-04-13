@@ -32,6 +32,8 @@ jobs:
         run: npm i
       - name: Build
         run: npm run build
+      - name: Build downloadable Chrome unpacked package
+        run: npm run chrome:package
       - id: set_var
         run: |
           content=`cat ./src/manifest.json`
@@ -90,6 +92,7 @@ jobs:
           files: |
             dist/chrome-immersive_translate-${{ steps.set_var.outputs.version }}.zip
             dist/firefox-immersive_translate-${{ steps.set_var.outputs.version }}.xpi
+            dist/immersive-translate-chrome-unpacked-v${{ steps.set_var.outputs.version }}.zip
       # - name: Download key.pem from secret CHROME_CRX_PRIVATE_KEY
       #   run: |
       #     echo "${{ secrets.CHROME_CRX_PRIVATE_KEY }}" > dist/chrome/key.pem
@@ -106,4 +109,3 @@ jobs:
           client-id: ${{ secrets.GOOGLE_CLIENT_ID }}
           client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           refresh-token: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
-

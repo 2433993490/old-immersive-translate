@@ -1156,6 +1156,111 @@ const translationService = (function () {
     )[0][0];
   };
 
+  function extractByPath(obj, path) {
+    if (!path) return obj;
+    const pathPieces = String(path).split(".");
+    let current = obj;
+    for (const piece of pathPieces) {
+      if (current == null) return undefined;
+      if (/^\d+$/.test(piece)) {
+        current = current[Number(piece)];
+      } else {
+        current = current[piece];
+      }
+    }
+    return current;
+  }
+
+  translationService.ocrTextFromImage = async (imageUrl) => {
+    const provider = twpConfig.get("ocrApiProvider") || "ocrspace";
+    const ocrApiKey = (twpConfig.get("ocrApiKey") || "").trim();
+    if (!ocrApiKey) {
+      throw new Error("OCR API key is empty.");
+    }
+    if (!imageUrl) {
+      throw new Error("Image URL is empty.");
+    }
+
+    if (provider === "ocrspace") {
+      const body = new URLSearchParams({
+        apikey: ocrApiKey,
+        url: imageUrl,
+        language: "eng",
+        isOverlayRequired: "false",
+      });
+      const response = await fetch("https://api.ocr.space/parse/image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body,
+      });
+      const data = await response.json();
+      const text = extractByPath(data, "ParsedResults.0.ParsedText");
+      if (!text || !String(text).trim()) {
+        throw new Error(data?.ErrorMessage || "No OCR text extracted.");
+      }
+      return String(text).trim();
+    }
+
+    if (provider === "custom") {
+      const endpoint = (twpConfig.get("ocrApiEndpoint") || "").trim();
+      if (!endpoint) {
+        throw new Error("Custom OCR endpoint is empty.");
+      }
+      let extraHeaders = {};
+      const extraHeadersRaw = twpConfig.get("ocrApiExtraHeaders") || "{}";
+      try {
+        extraHeaders = JSON.parse(extraHeadersRaw);
+      } catch (e) {
+        throw new Error("Custom OCR extra headers is not valid JSON.");
+      }
+      const responsePath =
+        (twpConfig.get("ocrApiResponsePath") || "text").trim() || "text";
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${ocrApiKey}`,
+          ...extraHeaders,
+        },
+        body: JSON.stringify({
+          imageUrl,
+        }),
+      });
+      const data = await response.json();
+      const text = extractByPath(data, responsePath);
+      if (!text || !String(text).trim()) {
+        throw new Error("No OCR text extracted from custom provider response.");
+      }
+      return String(text).trim();
+    }
+
+    throw new Error(`Unsupported OCR provider: ${provider}`);
+  };
+
+  translationService.ocrTranslateImage = async (
+    imageUrl,
+    targetLanguage,
+    dontSaveInPersistentCache = false
+  ) => {
+    const extractedText = await translationService.ocrTextFromImage(imageUrl);
+    const pageTranslatorService = twpConfig.get("pageTranslatorService");
+    const translatedText = await translationService.translateSingleText(
+      pageTranslatorService,
+      "auto",
+      targetLanguage,
+      extractedText,
+      dontSaveInPersistentCache
+    );
+    return {
+      extractedText,
+      translatedText,
+      targetLanguage,
+      imageUrl,
+    };
+  };
+
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // If the translation request came from an incognito window, the translation should not be cached on disk.
     const dontSaveInPersistentCache = sender.tab ? sender.tab.incognito : false;
@@ -1207,6 +1312,19 @@ const translationService = (function () {
           console.error(e);
         });
 
+      return true;
+    } else if (request.action === "ocrTranslateImage") {
+      translationService
+        .ocrTranslateImage(
+          request.imageUrl,
+          request.targetLanguage,
+          dontSaveInPersistentCache
+        )
+        .then((results) => sendResponse({ ok: true, ...results }))
+        .catch((e) => {
+          sendResponse({ ok: false, error: String(e && e.message ? e.message : e) });
+          console.error(e);
+        });
       return true;
     }
   });
