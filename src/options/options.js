@@ -442,6 +442,36 @@ twpConfig.onReady(function () {
     }
     $("#translateDynamicallyCreatedContent").value = twpConfig.get("translateDynamicallyCreatedContent")
 
+    $("#enableImageOCR").onchange = e => {
+        twpConfig.set("enableImageOCR", e.target.value)
+    }
+    $("#enableImageOCR").value = twpConfig.get("enableImageOCR")
+
+    $("#ocrApiProvider").onchange = e => {
+        twpConfig.set("ocrApiProvider", e.target.value)
+    }
+    $("#ocrApiProvider").value = twpConfig.get("ocrApiProvider")
+
+    $("#ocrApiKey").onchange = e => {
+        twpConfig.set("ocrApiKey", e.target.value.trim())
+    }
+    $("#ocrApiKey").value = twpConfig.get("ocrApiKey")
+
+    $("#ocrApiEndpoint").onchange = e => {
+        twpConfig.set("ocrApiEndpoint", e.target.value.trim())
+    }
+    $("#ocrApiEndpoint").value = twpConfig.get("ocrApiEndpoint")
+
+    $("#ocrApiResponsePath").onchange = e => {
+        twpConfig.set("ocrApiResponsePath", e.target.value.trim())
+    }
+    $("#ocrApiResponsePath").value = twpConfig.get("ocrApiResponsePath")
+
+    $("#ocrApiExtraHeaders").onchange = e => {
+        twpConfig.set("ocrApiExtraHeaders", e.target.value.trim() || "{}")
+    }
+    $("#ocrApiExtraHeaders").value = twpConfig.get("ocrApiExtraHeaders")
+
     $("#autoTranslateWhenClickingALink").onchange = e => {
         if (e.target.value == "yes") {
             chrome.permissions.request({

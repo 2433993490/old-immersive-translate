@@ -6,7 +6,7 @@ const twpConfig = (function () {
   const defaultTargetLanguages = ["zh-CN"];
   /**
    * all configName available
-   * @typedef {"pageTranslatorService" | "textTranslatorService" | "ttsSpeed" | "enableDeepL" | "targetLanguage" | "targetLanguageTextTranslation" | "targetLanguages" | "alwaysTranslateSites" | "neverTranslateSites" | "sitesToTranslateWhenHovering" | "langsToTranslateWhenHovering" | "alwaysTranslateLangs" | "neverTranslateLangs" | "customDictionary" | "showTranslatePageContextMenu" | "showTranslateSelectedContextMenu" | "showButtonInTheAddressBar" | "showOriginalTextWhenHovering" | "showTranslateSelectedButton" | "showPopupMobile" | "useOldPopup" | "darkMode" | "popupBlueWhenSiteIsTranslated" | "popupPanelSection" | "showReleaseNotes" | "dontShowIfPageLangIsTargetLang" | "dontShowIfPageLangIsUnknown" | "dontShowIfSelectedTextIsTargetLang" | "dontShowIfSelectedTextIsUnknown" | "hotkeys" | "expandPanelTranslateSelectedText" | "translateTag_pre" | "dontSortResults" | "translateDynamicallyCreatedContent" | "autoTranslateWhenClickingALink" | "translateSelectedWhenPressTwice" | "translateTextOverMouseWhenPressTwice" | "translateClickingOnce"} DefaultConfigNames
+   * @typedef {"pageTranslatorService" | "textTranslatorService" | "ttsSpeed" | "enableDeepL" | "targetLanguage" | "targetLanguageTextTranslation" | "targetLanguages" | "alwaysTranslateSites" | "neverTranslateSites" | "sitesToTranslateWhenHovering" | "langsToTranslateWhenHovering" | "alwaysTranslateLangs" | "neverTranslateLangs" | "customDictionary" | "showTranslatePageContextMenu" | "showTranslateSelectedContextMenu" | "showButtonInTheAddressBar" | "showOriginalTextWhenHovering" | "showTranslateSelectedButton" | "showPopupMobile" | "useOldPopup" | "darkMode" | "popupBlueWhenSiteIsTranslated" | "popupPanelSection" | "showReleaseNotes" | "dontShowIfPageLangIsTargetLang" | "dontShowIfPageLangIsUnknown" | "dontShowIfSelectedTextIsTargetLang" | "dontShowIfSelectedTextIsUnknown" | "hotkeys" | "expandPanelTranslateSelectedText" | "translateTag_pre" | "dontSortResults" | "translateDynamicallyCreatedContent" | "autoTranslateWhenClickingALink" | "translateSelectedWhenPressTwice" | "translateTextOverMouseWhenPressTwice" | "translateClickingOnce" | "enableImageOCR" | "ocrApiProvider" | "ocrApiKey" | "ocrApiEndpoint" | "ocrApiExtraHeaders" | "ocrApiResponsePath"} DefaultConfigNames
    */
   const defaultConfig = {
     pageTranslatorService: "google", // google yandex
@@ -41,6 +41,12 @@ const twpConfig = (function () {
     dontSortResults: "no",
     translateDynamicallyCreatedContent: "yes",
     autoTranslateWhenClickingALink: "no",
+    enableImageOCR: "no",
+    ocrApiProvider: "ocrspace", // ocrspace custom
+    ocrApiKey: "",
+    ocrApiEndpoint: "",
+    ocrApiExtraHeaders: "{}", // JSON object string
+    ocrApiResponsePath: "ParsedResults.0.ParsedText", // for custom provider
 
   };
   const config = structuredClone(defaultConfig);

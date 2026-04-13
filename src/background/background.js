@@ -213,6 +213,11 @@ if (typeof chrome.contextMenus !== "undefined") {
         title: chrome.i18n.getMessage("msgPDFtoHTML"),
         contexts: ["page_action"]
     })
+    chrome.contextMenus.create({
+        id: "ocr-translate-image",
+        title: "OCR Translate Image",
+        contexts: ["image"]
+    })
 
     const tabHasContentScript = {}
 
@@ -231,6 +236,20 @@ if (typeof chrome.contextMenus !== "undefined") {
                   action: "toggle-translation"
               }, checkedLastError)
             }
+        } else if (info.menuItemId == "ocr-translate-image") {
+            if (twpConfig.get("enableImageOCR") !== "yes") return;
+            const targetLanguage = twpConfig.get("targetLanguage") || (twpConfig.get("targetLanguages") || [])[0] || "en";
+            chrome.runtime.sendMessage({
+                action: "ocrTranslateImage",
+                imageUrl: info.srcUrl,
+                targetLanguage
+            }, result => {
+                if (!tab || !tab.id) return;
+                chrome.tabs.sendMessage(tab.id, {
+                    action: "showOCRResult",
+                    payload: result
+                }, checkedLastError)
+            })
         } else if (info.menuItemId == "browserAction-showPopup") {
             resetBrowserAction(true)
 

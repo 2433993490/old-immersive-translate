@@ -195,6 +195,22 @@
                     <option value="yes" data-i18n="msgYes">Yes</option>
                 </select>
                 <br>
+                <p><b>Enable OCR translation for images</b></p>
+                <select id="enableImageOCR" class="w3-select w3-margin">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+                <p><b>OCR API provider</b></p>
+                <select id="ocrApiProvider" class="w3-select w3-margin">
+                    <option value="ocrspace">OCR.Space</option>
+                    <option value="custom">Custom API</option>
+                </select>
+                <input id="ocrApiKey" class="w3-input w3-border w3-margin-bottom" placeholder="OCR API Key">
+                <input id="ocrApiEndpoint" class="w3-input w3-border w3-margin-bottom" placeholder="Custom OCR endpoint (POST JSON)">
+                <input id="ocrApiResponsePath" class="w3-input w3-border w3-margin-bottom" placeholder="Custom response text path, e.g. data.text">
+                <textarea id="ocrApiExtraHeaders" rows="3" class="w3-input w3-border w3-margin-bottom" placeholder='Custom headers JSON, e.g. {"x-api-key":"..."}'></textarea>
+                <p style="color:#999;">Usage: right-click an image and choose "OCR Translate Image".</p>
+                <br>
                 <div class="desktopOnly">
                     <br>
                     <div class="w3-display-container w3-padding w3-margin-top">
