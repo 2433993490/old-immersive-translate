@@ -51,6 +51,8 @@ User steps:
 4. Click **Load unpacked**
 5. Select the extracted `chrome` folder
 
+For maintainers: when pushing a `v*` tag, GitHub Releases workflow will upload this zip as a release asset for direct download.
+
 
 ## Dev
 
@@ -90,4 +92,3 @@ and then run:
 ```
 make watch
 ```
-
